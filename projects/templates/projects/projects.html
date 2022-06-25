@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+{% block content %}
+
+    <h1>Heloo</h1>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis consequuntur dolores iusto repudia<br>
+    ndae possimus incidunt necessitatibus! Eum dolo<br>
+    remque cupiditate vitae officiis voluptatibus natus culpa, ullam vero ipsum ea, fuga beatae?</p>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Project</th>
+        <th>Positive Votes</th>
+        <th>Votes</th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for project in projects %}
+    <tr>
+        <td>{{project.id}}</td>
+        <td>{{project.title}}</td>
+        <td>{{project.vote_ratio}}</td>
+        <td>{{project.vote_total}}</td>
+        <td>{{project.created}}</td>
+        <td>Name:<a href="{% url 'update-project' project.id %}">EDIT</a></td>
+        <td>Name:<a href="{% url 'project' project.id %}">VIEW</a></td>
+        <td>Name:<a href="{% url 'delete-project' project.id %}">DELETE</a></td>
+
+
+    </tr>
+
+
+    {% endfor %}
+</table>
+
+    {% endblock content %}

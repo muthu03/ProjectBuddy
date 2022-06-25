@@ -1,0 +1,15 @@
+<h1>HELOD</h1>
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+<img style=" max-width: 500px;"src="{{ project.featured_image.url  }}">
+
+<h1>{{project.title}}</h1>
+<h2>{{project.description  }}</h2>
+
+{% for tag in tags %}
+<h2>{{tag}}</h2>
+{% endfor %}
+{% endblock %}
