@@ -23,6 +23,7 @@ def project(request,pk):
 #and it will send user to login page
 @login_required(login_url="login")
 def createProject(request):
+    profile=request.user.profile
     form=projectForm()
 
     if request.method=='POST':
@@ -31,7 +32,10 @@ def createProject(request):
             #if the form is POST operation and django check if the forms is valid 
             # and it will redirect ot projects page
             # and we save the model
-            form.save()
+            project=form.save(commit=False)
+            project.owner=profile
+            project.save()
+            
             return redirect('projects')
 
     context={'form':form}
