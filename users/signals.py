@@ -28,9 +28,19 @@ def deleteUser(sender,instance,**kwargs):
     user.delete()
 
    
-
+def updateUser(sender,instance,created,**kwargs):
+    profile=instance
+    user=profile.user
+    #to know whether first instance
+    #whatever changes is done in via the profiel edit , it will change user also
+    if created == False:
+        user.first_name=profile.name
+        user.email=profile.email
+        user.username=profile.username
+        user.save()
 
 post_save.connect(createProfile,sender=User)
 post_delete.connect(deleteUser,sender=profile)
 #if user is deleted automatically profile is deleted
 #if profile is deleted so we wrote above code to dlete the deleted profile user 
+post_save.connect(updateUser,sender=profile)
