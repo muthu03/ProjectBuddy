@@ -2,6 +2,10 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Project
 from .forms import projectForm
+
+#to restrict un authenticated users to see add project page
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def projects(request):
@@ -15,6 +19,9 @@ def project(request,pk):
 
     return render(request,'projects/single-project.html',{'project':projectObj,'tags':tags})
 
+#required user to be loged in
+#and it will send user to login page
+@login_required(login_url="login")
 def createProject(request):
     form=projectForm()
 
@@ -30,7 +37,7 @@ def createProject(request):
     context={'form':form}
     return render(request,'projects/project_form.html',context)
 
-
+@login_required(login_url="login")
 def updateProject(request,pk):
     project=Project.objects.get(id=pk)
     form=projectForm(instance=project)
@@ -50,6 +57,7 @@ def updateProject(request,pk):
     context={'form':form}
     return render(request,'projects/project_form.html',context)
 
+@login_required(login_url="login")
 def deleteProject(request,pk):
     #It will fisrt get ID of the project that has ot be deleted
     #Then it goes to the method and if the method is post i.e by clicking submit

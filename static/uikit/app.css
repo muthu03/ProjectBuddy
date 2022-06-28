@@ -2,18 +2,18 @@
   padding: 4.2rem 0;
 }
 
-.mumble-block__title {
+.mumble-blocktitle {
   color: var(--color-main);
   font-size: 3rem;
   font-weight: 700;
 }
 
-.mumble-block__info {
+.mumble-blockinfo {
   padding-bottom: 1rem;
   border-bottom: 2px solid var(--color-main);
 }
 
-.mumble-block__preview {
+.mumble-blockpreview {
   padding: 3rem 0;
 }
 
@@ -21,19 +21,19 @@
   background-color: var(--color-light);
 }
 
-.mumble-block--typography .mumble-block__preview > * {
+.mumble-block--typography .mumble-blockpreview > * {
   line-height: 2;
 }
 
-.mumble-block--card .mumble-block__preview {
+.mumble-block--card .mumble-blockpreview {
   display: flex;
 }
 
-.mumble-block--card .mumble-block__preview > * {
+.mumble-block--card .mumble-blockpreview > * {
   margin-right: 2rem;
 }
 
-.mumble-block--avatar .mumble-block__preview > * {
+.mumble-block--avatar .mumble-blockpreview > * {
   margin-right: 1rem;
 }
 
@@ -79,7 +79,7 @@ pre.codeblock {
   height: 64rem;
 }
 
-.mumble-block__preview {
+.mumble-blockpreview {
   position: relative;
 }
 
