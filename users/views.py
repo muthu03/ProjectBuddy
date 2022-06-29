@@ -93,14 +93,14 @@ def userProfile(request,pk):
         'otherSkills':otherSkills,
     } 
     return render(request,'users/user-profile.html',context)
+
 @login_required(login_url='login')
 def userAccount(request):
     #this will get the profile of loginned i nuser
     profile=request.user.profile
     skills=profile.skill_set.all()   
     projects=profile.project_set.all()
-    context={'profile':profile,'skills':skills,'projects':projects,
-    }
+    context={'profile':profile,'skills':skills,'projects':projects}
     return render(request,'users/account.html',context)
 
 @login_required(login_url='login')
