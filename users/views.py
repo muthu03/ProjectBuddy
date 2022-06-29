@@ -1,5 +1,6 @@
 from concurrent.futures.process import _MAX_WINDOWS_WORKERS
 from email import message
+from gettext import install
 import imp
 from multiprocessing import context
 from operator import imod
@@ -7,7 +8,7 @@ from pydoc import describe
 from django.contrib.auth.models import User
 
 from django.shortcuts import render,redirect
-from .models import profile
+from .models import profile, skill
 from django.contrib.auth import login,authenticate,logout
 
 #to restrict un authenticated users to see add project page
@@ -16,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 #for flash messages
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm,ProfileForm
+from .forms import CustomUserCreationForm,ProfileForm,SkillForm
 
 def profiles(request):
     profiles=profile.objects.all()
@@ -117,3 +118,45 @@ def editAccount(request):
             return redirect('account')
     context={'form':form}
     return render(request,'users/profile_form.html',context)
+
+@login_required(login_url='login')
+def createSkill(request):
+    profile=request.user.profile
+    form=SkillForm()
+    if request.method == 'POST':
+        form=SkillForm(request.POST)
+        if form.is_valid:
+            skill=form.save(commit=False)
+            skill.owner=profile
+            skill.save()
+            messages.success(request,'skill was added successfully')
+            return redirect('account')
+    context={'form':form}
+    return render(request,'users/skill_form.html',context)
+
+@login_required(login_url='login')
+def updateSkill(request,pk):
+    profile=request.user.profile
+    skill=profile.skill_set.get(id=pk)
+    form=SkillForm(instance=skill)
+
+    if request.method == 'POST':
+        form=SkillForm(request.POST,instance=skill)
+        if form.is_valid:
+            form.save()
+            messages.success(request,'skill was Updated')
+
+            return redirect('account')
+    context={'form':form}
+    return render(request,'users/skill_form.html',context)
+
+def deleteSkill(request,pk):
+    profile=request.user.profile
+    skill=profile.skill_set.get(id=pk)
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request,'skill was Deleted Successfully')
+
+        return redirect('account')
+    context={'object':skill}
+    return render(request,'delete.html',context)

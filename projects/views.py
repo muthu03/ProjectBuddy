@@ -36,14 +36,16 @@ def createProject(request):
             project.owner=profile
             project.save()
             
-            return redirect('projects')
+            return redirect('account')
 
     context={'form':form}
     return render(request,'projects/project_form.html',context)
 
 @login_required(login_url="login")
 def updateProject(request,pk):
-    project=Project.objects.get(id=pk)
+    profile=request.user.profile
+
+    project=profile.project_set.get(id=pk)
     form=projectForm(instance=project)
     #based on the click in the form EDIT , we will get project ID
     #Based on the project ID we get form for that project
@@ -56,22 +58,24 @@ def updateProject(request,pk):
             # and it will redirect ot projects page
             # and we save the model
             form.save()
-            return redirect('projects')
+            return redirect('account')
 
     context={'form':form}
     return render(request,'projects/project_form.html',context)
 
 @login_required(login_url="login")
 def deleteProject(request,pk):
+    profile=request.user.profile
+
     #It will fisrt get ID of the project that has ot be deleted
     #Then it goes to the method and if the method is post i.e by clicking submit
     #it deleted the data and renders back to projects page
-    project=Project.objects.get(id=pk)
+    project=profile.project_set.get(id=pk)
     context={'object':project}
 
     if request.method=='POST':
         project.delete()
-        return redirect('projects') 
+        return redirect('account') 
  
     
-    return render(request,'projects/delete.html',context)
+    return render(request,'delete.html',context)
