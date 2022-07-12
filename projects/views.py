@@ -1,16 +1,21 @@
+from operator import imod
+from turtle import title
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Project
+
+from .models import Project,Tag
 from .forms import projectForm
+from django.db.models import Q
 
 #to restrict un authenticated users to see add project page
 from django.contrib.auth.decorators import login_required
 
+from .utils import searchProjects
 # Create your views here.
 
 def projects(request):
-    projects=Project.objects.all()
-    context={'projects':projects}
+    projects,search_query=searchProjects(request)
+    context={'projects':projects,'search_query':search_query}
     return render(request,'projects/projects.html',context)
     
 def project(request,pk):
@@ -77,5 +82,5 @@ def deleteProject(request,pk):
         project.delete()
         return redirect('account') 
  
-    
+     
     return render(request,'delete.html',context)
