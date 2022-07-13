@@ -10,7 +10,7 @@
         </div>
 
         <div class="hero-section__search">
-          <form class="form" action="{% url 'projects' %}" method="get">
+          <form  id="searchForm" class="form" action="{% url 'projects' %}" method="get">
             <div class="form__field">
               <label for="formInput#search">Search By Projects </label>
               <input class="input input--text" id="formInput#search" type="text" name="search_query"
@@ -64,3 +64,6 @@
    
   </main>
     {% endblock content %}
+<!-- when we search anything in the search form and we navigate to other page we could not find that search
+result  -->
+

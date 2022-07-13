@@ -3,22 +3,22 @@
   <ul class="container">
 
     {% if query_set.has_previous %}
-    <li><a href="?page={{query_set.previous_page_number}}" class="btn page-link">&#10094; prev</a></li>
+    <li><a href="?page={{query_set.previous_page_number}}" class="btn page-link" data-page="{{query_set.previous_page_number}}">&#10094; prev</a></li>
 
     {% endif %}
 
     {% for page in custom_range %}
 
     {% if page == query_set.number %}
-    <li><a href="?page={{page}}" class="btn page-link btn--sub">{{page}}</a></li>
+    <li><a href="?page={{page}}" class="btn page-link btn--sub" data-page="{{page}}">{{page}}</a></li>
 
     {% else %}
-    <li><a href="?page={{page}}" class="btn page-link">{{page}}</a></li>
+    <li><a href="?page={{page}}" class="btn page-link" data-page="{{page}}">{{page}}</a></li>
     {% endif %}
 
     {% endfor %}
     {% if query_set.has_next %}
-    <li><a href="?page={{query_set.next_page_number}}" class="btn page-link">&#10095; next</a></li>
+    <li><a href="?page={{query_set.next_page_number}}" class="btn page-link" data-page="{{query_set.next_page_number}}">  &#10095; next</a></li>
 
     {% endif %}
     
