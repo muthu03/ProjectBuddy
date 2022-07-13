@@ -1,5 +1,7 @@
+from importlib.machinery import PathFinder
 from operator import imod
-from turtle import title
+from turtle import right, title
+from unittest import result
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
@@ -10,12 +12,16 @@ from django.db.models import Q
 #to restrict un authenticated users to see add project page
 from django.contrib.auth.decorators import login_required
 
-from .utils import searchProjects
+from .utils import searchProjects,paginateProjects
 # Create your views here.
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
 def projects(request):
     projects,search_query=searchProjects(request)
-    context={'projects':projects,'search_query':search_query}
+    custom_range,projects=paginateProjects(request,projects,3)
+
+
+    context={'projects':projects,'search_query':search_query,'custom_range':custom_range}
     return render(request,'projects/projects.html',context)
     
 def project(request,pk):

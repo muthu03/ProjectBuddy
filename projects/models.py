@@ -3,6 +3,7 @@ from email.policy import default
 from django.db import models
 import uuid
 from users.models import profile
+
 # Create your models here.
 class Project(models.Model):
     owner=models.ForeignKey(profile,null=True,blank=True,on_delete=models.SET_NULL)
@@ -28,6 +29,10 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        #order the project by created date in ascending order
+        ordering=['created']
 
 class Review(models.Model):
     #This is used for drop down list i.e to up vote and down vote
