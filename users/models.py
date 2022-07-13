@@ -1,5 +1,7 @@
+from cProfile import Profile
 from distutils.command.upload import upload
 from email.policy import default
+from operator import mod
 from re import T
 from tkinter import CASCADE
 from django.db import models
@@ -43,3 +45,29 @@ class skill(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+class Messages(models.Model):
+    #on delete the account the reciver will able to see the message and it should not be deleted
+    sender=models.ForeignKey(profile,on_delete=models.SET_NULL,null=True,blank=True)
+    #null = true means user dont have account can send message 
+    recipient=models.ForeignKey(profile,on_delete=models.SET_NULL,null=True,blank=True,related_name="messagess")
+    name=models.CharField(max_length=200,null=True,blank=True)
+    email=models.CharField(max_length=500,null=True,blank=True)
+    subject=models.CharField(max_length=200,null=True,blank=True)
+    body=models.TextField()
+    is_read=models.BooleanField(default=False,null=True)
+    created=models.DateTimeField(auto_now_add=True)
+    id=models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
+
+    def __str__(self):
+        return str(self.subject)
+    
+    #when user open inbox it should order based on
+    class Meta:
+        ordering=['is_read','-created']
+    
+
+
+
+
+
