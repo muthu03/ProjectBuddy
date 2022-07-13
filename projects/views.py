@@ -5,8 +5,10 @@ from unittest import result
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
+from django.contrib import messages
+
 from .models import Project,Tag
-from .forms import projectForm
+from .forms import projectForm,ReviewForm
 from django.db.models import Q
 
 #to restrict un authenticated users to see add project page
@@ -27,8 +29,24 @@ def projects(request):
 def project(request,pk):
     projectObj=Project.objects.get(id=pk)
     tags=projectObj.tags.all()
+    form=ReviewForm()
 
-    return render(request,'projects/single-project.html',{'project':projectObj,'tags':tags})
+    if request.method == 'POST':
+        form=ReviewForm(request.POST)
+        review=form.save(commit=False)
+        review.project=projectObj
+        review.owner=request.user.profile
+        review.save()
+        projectObj.getVoteCount
+        #calculate vote total and vote ratio by calling the functionin the models 
+        messages.success(request,"your review was successfully submitted")
+        return redirect('project',pk=projectObj.id)
+        #we have to set user to review so we are making it as commit as false
+
+        #update project vote count
+
+
+    return render(request,'projects/single-project.html',{'project':projectObj,'tags':tags,'form':form})
 
 #required user to be loged in
 #and it will send user to login page

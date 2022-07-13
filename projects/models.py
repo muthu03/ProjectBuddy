@@ -1,5 +1,7 @@
 from cProfile import Profile
 from email.policy import default
+from enum import unique
+from tkinter import CASCADE, FLAT
 from django.db import models
 import uuid
 from users.models import profile
@@ -31,8 +33,29 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        #order the project by created date in ascending order
-        ordering=['created']
+        #order the project by top voted  in descending order so -
+        ordering=['-vote_ratio','-vote_total','title']
+    
+    @property 
+    def reviewers(self):
+        #this will give everyhting as list bcz flat =True and we are having list of ID s who are done wiht review
+        queryset=self.review.all().values_list('owner__id',flat=True)
+        return queryset
+
+
+
+
+    @property
+    def getVoteCount(self):
+        reviews = self.review.all()
+        upVotes = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upVotes / totalVotes) * 100
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+
+        self.save()
 
 class Review(models.Model):
     #This is used for drop down list i.e to up vote and down vote
@@ -40,17 +63,26 @@ class Review(models.Model):
         ('up','Up Vote'),
         ('down','Down Vite'),
     ]
-    #owner=
+    owner=models.ForeignKey(profile,on_delete=models.CASCADE,null=True)
     # if project is deleted all reviews will be deleted using cascade
     #To handle One-To-Many relationships in Django you need to use ForeignKey 
     #this access project model and that return project.title
-    project=models.ForeignKey(Project,on_delete=models.CASCADE)
+    project=models.ForeignKey(Project,on_delete=models.CASCADE,related_name="review")
     body=models.TextField(null=True,blank=True)
     value=models.CharField(max_length=200,choices=VOTE_TYPE)
     created=models.DateTimeField(auto_now_add=True)
     id=models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
     def __str__(self):
         return self.value
+    
+    #user can give only one review so we need to bind the both owner and project
+    class Meta:
+        unique_together=[['owner','project']] 
+    
+  
+
+
+
 
 #mant to many relationship
 class Tag(models.Model):
